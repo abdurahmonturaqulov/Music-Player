@@ -1,7 +1,7 @@
 const musicContainer = document.querySelector("#music-container");
 const playBtn = document.querySelector("#play");
 const prevBtn = document.querySelector("#prev");
-const nextBtn = document.querySelector("next");
+const nextBtn = document.querySelector("#next");
 
 const audio = document.querySelector("#music");
 const progress = document.querySelector("#progress");
@@ -10,7 +10,7 @@ const title = document.querySelector("#title");
 const cover = document.querySelector("#cover");
 
 const songs = ["Arabic Music", "Eminem Rihanna", "Snoop Dogg", "SEVARA", "adam"];
-let songIndex = 4;
+let songIndex = 0;
 
 loadSong(songs[songIndex]);
 
@@ -25,7 +25,7 @@ playBtn.addEventListener("click", () => {
     if (isPlaying) {
         pauseSong();
 
-    }else {
+    } else {
         playSong();
     }
 });
@@ -60,4 +60,18 @@ function nextSong() {
     }
     loadSong(songs[songIndex]);
     playSong();
+}
+
+audio.addEventListener("timeupdate", updateProgress);
+function updateProgress(e) {
+    const { duration, currentTime } = e.srcElement;
+    const progressPercent = (currentTime / duration) * 100;
+    progress.style.width = `${progressPercent}%`;
+}
+progressContainer.addEventListener("click", setProgress);
+function setProgress(e) {
+    const width = this.clientWidth;
+    const clickX = e.offsetX;
+    const duration = audio.duration;
+    audio.currentTime = (clickX / width) * duration;
 }
